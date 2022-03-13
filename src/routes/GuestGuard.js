@@ -4,9 +4,9 @@ import { Navigate } from 'react-router-dom';
 import { PATH_NAME } from 'configs';
 
 function GuestGuard({ children }) {
-  const isAuth = true;
+  const isAuth = false;
 
-  if (!isAuth) return <Navigate to={PATH_NAME.LOGIN} />;
+  if (isAuth) return <Navigate to={PATH_NAME.ROOT} />;
 
   return <>{children}</>;
 }

@@ -89,10 +89,7 @@ function Login() {
               id='password'
               autoComplete='current-password'
             />
-            <FormControlLabel
-              control={<Checkbox value='remember' color='primary' />}
-              label='Remember me'
-            />
+
             <Button
               type='submit'
               fullWidth

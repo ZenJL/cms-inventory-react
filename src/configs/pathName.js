@@ -6,6 +6,7 @@ export const PATH_NAME = {
   PRODUCT_ADD: '/product/add',
   KANBAN: '/kanban',
   USER: '/user',
+  PLAYGROUND: '/playground',
 
   // public routes
   LOGIN: '/login',

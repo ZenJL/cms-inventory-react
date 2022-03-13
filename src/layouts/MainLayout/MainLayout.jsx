@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
@@ -28,6 +29,7 @@ import ShopIcon from '@mui/icons-material/Shop';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
 import ListIcon from '@mui/icons-material/List';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -115,7 +117,7 @@ const useStyles = makeStyles(() => ({
 export default function MiniDrawer({ children }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -210,69 +212,93 @@ export default function MiniDrawer({ children }) {
         <Divider />
 
         <List>
-          {['Dashboard', 'Product', 'Kanban', 'User'].map((text, index) => {
-            if (text === 'Product') {
+          {['Dashboard', 'Product', 'Kanban', 'User', 'Playground'].map(
+            (text, index) => {
+              if (text === 'Product') {
+                return (
+                  <>
+                    <ListItemButton key={text} onClick={handleToggleSubmenu}>
+                      <ListItemIcon>
+                        <ShopIcon />
+                      </ListItemIcon>
+                      <ListItemText primary='Product' />
+                      {openSubMenu ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={openSubMenu} timeout='auto' unmountOnExit>
+                      <List component='div' disablePadding>
+                        <Link to='/product/add'>
+                          <ListItemButton sx={{ pl: 4 }}>
+                            <ListItemIcon>
+                              <AddIcon />
+                            </ListItemIcon>
+                            <ListItemText primary='Add Product' />
+                          </ListItemButton>
+                        </Link>
+                        <Link to='/product'>
+                          <ListItemButton sx={{ pl: 4 }}>
+                            <ListItemIcon>
+                              <ListIcon />
+                            </ListItemIcon>
+                            <ListItemText primary='List Product' />
+                          </ListItemButton>
+                        </Link>
+                      </List>
+                    </Collapse>
+                  </>
+                );
+              }
+
               return (
                 <>
-                  <ListItemButton key={text} onClick={handleToggleSubmenu}>
-                    <ListItemIcon>
-                      <ShopIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Inbox' />
-                    {openSubMenu ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemButton>
-                  <Collapse in={openSubMenu} timeout='auto' unmountOnExit>
-                    <List component='div' disablePadding>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <AddIcon />
-                        </ListItemIcon>
-                        <ListItemText primary='Add Product' />
-                      </ListItemButton>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <ListIcon />
-                        </ListItemIcon>
-                        <ListItemText primary='List Product' />
-                      </ListItemButton>
-                    </List>
-                  </Collapse>
+                  <Link
+                    key={text}
+                    to={
+                      text === 'Dashboard'
+                        ? '/'
+                        : text === 'Kanban'
+                        ? '/kanban'
+                        : text === 'User'
+                        ? '/user'
+                        : '/playground'
+                    }
+                  >
+                    <ListItemButton
+                      key={text}
+                      // sx={{
+                      //   minHeight: 48,
+                      //   justifyContent: open ? 'initial' : 'center',
+                      //   px: 2.5,
+                      // }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : 'auto',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {index === 0 ? (
+                          <DashboardIcon />
+                        ) : index === 1 ? (
+                          <ShopIcon />
+                        ) : index === 2 ? (
+                          <InsertChartIcon />
+                        ) : index === 3 ? (
+                          <GroupIcon />
+                        ) : (
+                          <ViewInArIcon />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </Link>
                 </>
               );
             }
-
-            return (
-              <>
-                <ListItemButton
-                  key={text}
-                  // sx={{
-                  //   minHeight: 48,
-                  //   justifyContent: open ? 'initial' : 'center',
-                  //   px: 2.5,
-                  // }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {index === 0 ? (
-                      <DashboardIcon />
-                    ) : index === 1 ? (
-                      <ShopIcon />
-                    ) : index === 2 ? (
-                      <InsertChartIcon />
-                    ) : (
-                      <GroupIcon />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </>
-            );
-          })}
+          )}
         </List>
       </Drawer>
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
